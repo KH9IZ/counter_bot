@@ -1,12 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from flask import Flask
 from telebot import TeleBot
 from telebot.types import ForceReply
 from telebot.util import quick_markup
 
 
+app = Flask(__name__)
+
+
 with open('token', 'r') as f:
     bot = TeleBot(f.read().strip())
+
+
+@app.route(f'/bot{bot.token}', methods=['GET', 'POST'])
+def bot_route():
+    if request.is_json:
+        update = Update.de_json(request.json)
+        bot.process_new_updates([update])
+    else:
+        flask.abort(403)
 
 
 @bot.message_handler(commands=['start', 'create'])
