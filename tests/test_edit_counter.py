@@ -5,9 +5,13 @@ from unittest import TestCase
 from telebot import apihelper
 from telebot.types import Dice
 
-from main import bot
+from counter_bot import bot
 from tests.utils import build_message
-from tests.base import BaseBotTestCase
+from tests.base import (
+    BaseBotTestCase,
+    TEST_COUNTER_TEMPLATE,
+    TEST_REPLY_TO_MESSAGE,
+)
 
 
 class EditCounterTestCase(BaseBotTestCase):
@@ -19,7 +23,11 @@ class EditCounterTestCase(BaseBotTestCase):
         self.tg_faker.response_value(method='editMessageText', result='{"message_id": 10, "date": 10, "chat": {"id": 1, "type": "private"}}')
 
     def test_ok(self):
-        self.receive_message(message_id=2, text='new_name', reply_to=build_message(message_id=1,text="Counter\n\nCounts: 0"))
+        self.receive_message(
+            message_id=2, 
+            text='new_name', 
+            reply_to=build_message(message_id=1,text=TEST_REPLY_TO_MESSAGE.format(counter_name='', cnt=0)),
+        )
 
         self.process_updates()
 
@@ -30,6 +38,7 @@ class EditCounterTestCase(BaseBotTestCase):
             dict(
                 chat_id=1, 
                 message_id=1,
+                parse_mode='markdown',
                 reply_markup=json.dumps(dict(
                     inline_keyboard=[
                         [
@@ -38,7 +47,7 @@ class EditCounterTestCase(BaseBotTestCase):
                         ],
                     ],
                 )),
-                text="Counter new_name\n\nCounts: 0",
+                text=TEST_COUNTER_TEMPLATE.format(counter_name="new_name", cnt=0),
             ),
         )
 

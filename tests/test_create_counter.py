@@ -4,9 +4,12 @@ import json
 from telebot import apihelper
 from unittest import TestCase
 
-from main import bot
+from counter_bot import bot
 from tests.utils import build_message
-from tests.base import BaseBotTestCase
+from tests.base import (
+    BaseBotTestCase,
+    TEST_COUNTER_TEMPLATE,
+)
 
 
 class CreateCounterTestCase(BaseBotTestCase):
@@ -28,6 +31,7 @@ class CreateCounterTestCase(BaseBotTestCase):
             self.tg_faker.requests[1].params, 
             dict(
                 chat_id='1', 
+                parse_mode='markdown',
                 reply_markup=json.dumps(dict(
                     inline_keyboard=[
                         [
@@ -36,7 +40,7 @@ class CreateCounterTestCase(BaseBotTestCase):
                         ],
                     ],
                 )),
-                text="Counter\n\nCounts: 0",
+                text=TEST_COUNTER_TEMPLATE.format(counter_name='', cnt=0),
             ),
         )
         

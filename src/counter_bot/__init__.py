@@ -1,6 +1,7 @@
 from .main import (
-    app,
+    create_app,
     bot,
 )
 
-__all__ = ['app', 'bot']
+
+__all__ = ['create_app', 'bot']

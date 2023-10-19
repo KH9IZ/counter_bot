@@ -14,6 +14,10 @@ from tests.utils import (
 )
 
 
+TEST_COUNTER_TEMPLATE = "🔢 {counter_name}\n\n**{cnt}**"
+TEST_REPLY_TO_MESSAGE = "🔢 {counter_name}\n\n{cnt}"
+
+
 class BaseBotTestCase(TestCase):
     __updates: list[Update]
     __id_counter: int

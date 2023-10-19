@@ -5,9 +5,13 @@ from unittest import TestCase
 from telebot import apihelper
 from telebot.types import Dice
 
-from main import bot
+from counter_bot import bot
 from tests.utils import build_message
-from tests.base import BaseBotTestCase
+from tests.base import (
+    BaseBotTestCase,
+    TEST_COUNTER_TEMPLATE,
+    TEST_REPLY_TO_MESSAGE,
+)
 
 
 class CountTestCase(BaseBotTestCase):
@@ -19,7 +23,11 @@ class CountTestCase(BaseBotTestCase):
         self.tg_faker.response_value(method='answerCallbackQuery', result=True)
 
     def test_ok_plus(self):
-        self.receive_callback_query(callback_id=1, data='+1', message=build_message(message_id=1, text="Counter\n\nCounts: 0"))
+        self.receive_callback_query(
+            callback_id=1, 
+            data='+1', 
+            message=build_message(message_id=1, text=TEST_REPLY_TO_MESSAGE.format(counter_name='', cnt=0)),
+        )
 
         self.process_updates()
 
@@ -29,6 +37,7 @@ class CountTestCase(BaseBotTestCase):
             dict(
                 chat_id=1, 
                 message_id=1,
+                parse_mode='markdown',
                 reply_markup=json.dumps(dict(
                     inline_keyboard=[
                         [
@@ -37,13 +46,17 @@ class CountTestCase(BaseBotTestCase):
                         ],
                     ],
                 )),
-                text="Counter\n\nCounts: 1",
+                text=TEST_COUNTER_TEMPLATE.format(counter_name="", cnt=1),
             ),
         )
         self.assertEqual(self.tg_faker.requests[1].params, dict(callback_query_id=1))
 
     def test_ok_minus(self):
-        self.receive_callback_query(callback_id=1, data='-1', message=build_message(message_id=1, text="Counter\n\nCounts: 0"))
+        self.receive_callback_query(
+            callback_id=1, 
+            data='-1', 
+            message=build_message(message_id=1, text=TEST_REPLY_TO_MESSAGE.format(counter_name='', cnt=0)),
+        )
 
         self.process_updates()
 
@@ -53,6 +66,7 @@ class CountTestCase(BaseBotTestCase):
             dict(
                 chat_id=1, 
                 message_id=1,
+                parse_mode='markdown',
                 reply_markup=json.dumps(dict(
                     inline_keyboard=[
                         [
@@ -61,7 +75,7 @@ class CountTestCase(BaseBotTestCase):
                         ],
                     ],
                 )),
-                text="Counter\n\nCounts: -1",
+                text=TEST_COUNTER_TEMPLATE.format(counter_name="", cnt=-1),
             ),
         )
         self.assertEqual(self.tg_faker.requests[1].params, dict(callback_query_id=1))
