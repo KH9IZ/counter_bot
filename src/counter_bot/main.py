@@ -24,7 +24,7 @@ KEYBOARD = quick_markup({
     "-1": dict(callback_data='-1'),
     "+1": dict(callback_data='+1'),
 })
-RE_TEMPLATE = re.compile(fr"{PREFIX} (?P<counter_name>.*?)\n\n(?P<cnt>[0-9][0-9]*?)")
+RE_TEMPLATE = re.compile(fr"{PREFIX} (?P<counter_name>.*?)\n\n(?P<cnt>-?[0-9][0-9]*)")
 
 
 def parse_text(text):

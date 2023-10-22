@@ -27,38 +27,38 @@ To run bot on your server run `gunicorn counter_bot:create_app('/path/to/config.
 ## Road maps
 
 ### Road map bot
-[x] MVP
-[x] webhooks
-[ ] Async
+- [x] MVP
+- [x] webhooks
+- [ ] Async
 
 ### Road map tests
-[x] unittest
-[ ] pytest
-[ ] tox
+- [x] unittest
+- [ ] pytest
+- [ ] tox
 
 ### Road map building
-[x] setuptools
-[ ] poetry
+- [x] setuptools
+- [ ] poetry
 
 ### Road map deplayment
-[x] Manual deployment
-[ ] GitHub Actions
+- [x] Manual deployment
+- [ ] GitHub Actions
 
 ### Road map servers
-[x] Simple server
-[ ] Serverless
+- [x] Simple server
+- [ ] Serverless
 
 ### Road map infrastructure
-[x] Prod
-[ ] Testing
+- [x] Prod
+- [ ] Testing
 
 ### Road map documentation
-[x] README
-[ ] docs external / internal
+- [x] README
+- [ ] docs external / internal
 
 ### Road map logging
-[ ] logging
+- [ ] logging
 
 ### Flaker
-[ ] pyflake
-[ ] black
+- [ ] pyflake
+- [ ] black
