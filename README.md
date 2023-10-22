@@ -40,9 +40,9 @@ To run bot on your server run `gunicorn counter_bot:create_app('/path/to/config.
 - [x] setuptools
 - [ ] poetry
 
-### Road map deplayment
+### Road map deployment
 - [x] Manual deployment
-- [ ] GitHub Actions
+- [x] GitHub Actions
 
 ### Road map servers
 - [x] Simple server
