@@ -26,27 +26,27 @@ class CountTestCase(BaseBotTestCase):
         self.receive_callback_query(
             callback_id=1, 
             data='+1', 
-            message=build_message(message_id=1, text=TEST_REPLY_TO_MESSAGE.format(counter_name='', cnt=0)),
+            message=build_message(message_id=1, text=TEST_REPLY_TO_MESSAGE.format(counter_name='', cnt=-10)),
         )
 
         self.process_updates()
 
         self.assertEqual(len(self.tg_faker.requests), 2)
         self.assertEqual(
-            self.tg_faker.requests[0].params, 
+            self.tg_faker.requests[0].params,
             dict(
-                chat_id=1, 
+                chat_id=1,
                 message_id=1,
                 parse_mode='markdown',
                 reply_markup=json.dumps(dict(
                     inline_keyboard=[
                         [
-                            dict(text="-1", callback_data='-1'), 
-                            dict(text="+1", callback_data='+1'), 
+                            dict(text="-1", callback_data='-1'),
+                            dict(text="+1", callback_data='+1'),
                         ],
                     ],
                 )),
-                text=TEST_COUNTER_TEMPLATE.format(counter_name="", cnt=1),
+                text=TEST_COUNTER_TEMPLATE.format(counter_name="", cnt=-9),
             ),
         )
         self.assertEqual(self.tg_faker.requests[1].params, dict(callback_query_id=1))
@@ -55,7 +55,7 @@ class CountTestCase(BaseBotTestCase):
         self.receive_callback_query(
             callback_id=1, 
             data='-1', 
-            message=build_message(message_id=1, text=TEST_REPLY_TO_MESSAGE.format(counter_name='', cnt=0)),
+            message=build_message(message_id=1, text=TEST_REPLY_TO_MESSAGE.format(counter_name='', cnt=10)),
         )
 
         self.process_updates()
@@ -75,7 +75,7 @@ class CountTestCase(BaseBotTestCase):
                         ],
                     ],
                 )),
-                text=TEST_COUNTER_TEMPLATE.format(counter_name="", cnt=-1),
+                text=TEST_COUNTER_TEMPLATE.format(counter_name="", cnt=9),
             ),
         )
         self.assertEqual(self.tg_faker.requests[1].params, dict(callback_query_id=1))
