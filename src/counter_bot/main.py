@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import json
+import os
 import re
 from time import sleep
 
@@ -53,6 +54,19 @@ def bot_route(token):
     return ''
 
 
+@app.route('/reset_webhook', methods=['GET', 'POST'])
+def reset_webhook():
+    cfg = get_config()
+    bot.remove_webhook()
+    sleep(0.1)
+    with open(cfg['WEBHOOK_PUB_CERT']) as f:
+        bot.set_webhook(
+            url=cfg.get('WEBHOOK_URL'),
+            certificate=f,
+        )
+    return ''
+
+
 @bot.message_handler(commands=['start', 'create'])
 def new_counter(msg):
     bot.delete_message(msg.chat.id, msg.message_id)
@@ -96,28 +110,36 @@ def count(c):
 def fallback(msg):
     bot.delete_message(chat_id=msg.chat.id, message_id=msg.message_id)
 
-def create_app(config_path):
+
+def get_config(config_path=None):
+    config_path = config_path or os.getenv('BOT_CONFIG_PATH', None)
+    if config_path is None:
+        raise ValueError(f"Specify BOT_CONFIG_PATH variable")
+    if not os.path.exists(config_path):
+        raise ValueError(f"No such path {config_path}")
+
     with open(config_path) as f:
         cfg = json.load(f)
 
+    return cfg
+
+
+def create_wsgi_app(config_path=None):
+    cfg = get_config(config_path)
+    if 'TOKEN' not in cfg:
+        raise ValueError("Specify TOKEN")
+    bot.token = cfg['TOKEN']
+    return app
+
+
+def polling(cfg_path):
+    cfg = get_config(cfg_path)
     if 'TOKEN' not in cfg:
         raise ValueError("Specify TOKEN")
     bot.token = cfg['TOKEN']
     bot.remove_webhook()
-    sleep(0.1)
-    with open(cfg['WEBHOOK_PUB_CERT']) as f:
-        bot.set_webhook(
-            url=cfg.get('WEBHOOK_URL'),
-            certificate=f,
-        )
-    return app
-    
+    bot.infinity_polling()
+
 
 if __name__ == "__main__":
-    with open('config.json') as f:
-        cfg = json.load(f)
-
-    if 'TOKEN' not in cfg:
-        raise ValueError("Specify TOKEN")
-    bot.token = cfg['TOKEN']
-    bot.infinity_polling()
+    polling(sys.argv[2] if len(sys.argv) >= 2 else None)

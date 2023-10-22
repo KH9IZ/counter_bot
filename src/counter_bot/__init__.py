@@ -1,7 +1,7 @@
 from .main import (
-    create_app,
+    create_wsgi_app,
     bot,
 )
 
 
-__all__ = ['create_app', 'bot']
+__all__ = ['create_wsgi_app', 'bot']

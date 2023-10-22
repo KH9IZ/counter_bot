@@ -3,22 +3,32 @@ Trivial telegram bot for counting everything.
 
 Project structure: [src layout](https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/)
 
-To run bot on your server run `gunicorn counter_bot:create_app('/etc/counter_bot/config.json')`
+### How to run locally by long polling
+Create simple json file with your bot token:
+```json
+{"TOKEN": "bot123:abc"}
+```
+Then run with path to your config: `python3 -m counter_bot '/path/to/cfg.json'`
 
-config.json:
+### How to app for WSGI server (on gunicorn as an example)
+Create json file:
 ```json
 {
   "TOKEN": "bot:123abc",
-  "WEBHOOK_URL": "https://example.com/url",
+  "WEBHOOK_URL": "https://<your_server_domain>/bot<token>",
   "WEBHOOK_PUB_CERT": "/path/to/pub.crt"
 }
 ```
+
+To run bot on your server run `gunicorn counter_bot:create_app('/path/to/config.json')`
+
+!!When bot started, you need to open in your browser https://<your_server_domain>/reset\_webhooks
 
 ## Road maps
 
 ### Road map bot
 [x] MVP
-[ ] webhooks
+[x] webhooks
 [ ] Async
 
 ### Road map tests
@@ -43,7 +53,7 @@ config.json:
 [ ] Testing
 
 ### Road map documentation
-[ ] README
+[x] README
 [ ] docs external / internal
 
 ### Road map logging
