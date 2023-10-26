@@ -149,10 +149,14 @@ def cloud_function(event, context):
     # ):
     #     abort(403)
 
+    bot.token = os.environ['TOKEN']
     try:
         update = Update.de_json(json.loads(event['body']))
     except (ValueError, KeyError, json.decoder.JSONDecodeError):
-        abort(403)
+        return {
+            'statusCode': 403,
+            'body': '',
+        }
 
     bot.process_new_updates([update])
     return {
