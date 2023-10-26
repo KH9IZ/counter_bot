@@ -155,7 +155,10 @@ def cloud_function(event, context):
         abort(403)
 
     bot.process_new_updates([update])
-    return ''
+    return {
+        'statusCode': 200,
+        'body': '',
+    }
 
 
 if __name__ == "__main__":
