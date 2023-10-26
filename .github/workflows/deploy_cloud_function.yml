@@ -3,6 +3,8 @@ run-name: ${{ github.actor }} started deploy workflow
 
 on:
   push:
+    branches:
+      - master
     tags:
       - '*'
 
@@ -14,7 +16,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Create requests.txt
-      run: echo "counter_bot @ git+https://github.com/KH9IZ/counter_bot.git@${{github.ref_name}}" > /tmp/requirements.txt
+      run: echo "counter_bot @ git+https://github.com/KH9IZ/counter_bot.git@${{github.ref_name}}" > requirements.txt
     - name: Deploy function
       id: sls-func
       uses: yc-actions/yc-sls-function@v2
@@ -25,5 +27,5 @@ jobs:
         runtime: 'python311'
         memory: '128Mb'
         entrypoint: 'counter_bot.cloud_function'
-        include: /tmp/requirements.txt
+        include: requirements.txt
         environment: TOKEN=${{ secrets.TOKEN }}
