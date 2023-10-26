@@ -150,7 +150,7 @@ def cloud_function(event, context):
         abort(403)
 
     try:
-        update = Update.de_json(json.loads(event['body'])
+        update = Update.de_json(json.loads(event['body']))
     except (ValueError, KeyError, json.decoder.JSONDecodeError):
         abort(403)
 
