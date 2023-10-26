@@ -142,12 +142,12 @@ def polling(cfg_path):
 
 
 def cloud_function(event, context):
-    content_type = event['headers']['Content-Type']
-    if not (
-        content_type.startswith('application') and 
-        content_type.endswith('json')
-    ):
-        abort(403)
+    # content_type = event['headers']['Content-Type']
+    # if not (
+    #     content_type.startswith('application') and 
+    #     content_type.endswith('json')
+    # ):
+    #     abort(403)
 
     try:
         update = Update.de_json(json.loads(event['body']))
