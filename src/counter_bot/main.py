@@ -141,5 +141,29 @@ def polling(cfg_path):
     bot.infinity_polling()
 
 
+def cloud_function(event, context):
+    # content_type = event['headers']['Content-Type']
+    # if not (
+    #     content_type.startswith('application') and 
+    #     content_type.endswith('json')
+    # ):
+    #     abort(403)
+
+    bot.token = os.environ['TOKEN']
+    try:
+        update = Update.de_json(json.loads(event['body']))
+    except (ValueError, KeyError, json.decoder.JSONDecodeError):
+        return {
+            'statusCode': 403,
+            'body': '',
+        }
+
+    bot.process_new_updates([update])
+    return {
+        'statusCode': 200,
+        'body': '',
+    }
+
+
 if __name__ == "__main__":
     polling(sys.argv[2] if len(sys.argv) >= 2 else None)

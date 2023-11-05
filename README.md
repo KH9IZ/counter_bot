@@ -24,6 +24,11 @@ To run bot on your server run `gunicorn counter_bot:create_app('/path/to/config.
 
 !!When bot started, you need to open in your browser https://<your_server_domain>/reset\_webhooks
 
+TODO:
+- [ ] Dockerfile
+- [ ] Tests for different deploy types
+
+
 ## Road maps
 
 ### Road map bot
@@ -40,9 +45,9 @@ To run bot on your server run `gunicorn counter_bot:create_app('/path/to/config.
 - [x] setuptools
 - [ ] poetry
 
-### Road map deplayment
+### Road map deployment
 - [x] Manual deployment
-- [ ] GitHub Actions
+- [x] GitHub Actions
 
 ### Road map servers
 - [x] Simple server
