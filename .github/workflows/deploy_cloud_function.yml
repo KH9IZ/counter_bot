@@ -5,7 +5,7 @@ on:
   # Run deploy action only when pyproject.toml changed or when manually triggered
   push:
     branches:
-      - master
+      - 'master'
     paths:
       - 'pyproject.toml'
   workflow_dispatch:
@@ -47,7 +47,7 @@ jobs:
         id: dispatch-specific
         if: github.event_name == 'workflow_dispatch'
         run: |
-          git checkout ${{ inputs.revision }} &&
+          git checkout ${{ inputs.revision }} && \
           sed -e 's/^/revision\=/' >> $GITHUB_OUTPUTS
     
   # TODO: release creation
