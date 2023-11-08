@@ -1,5 +1,5 @@
+from .runners import cloud_function
 from .main import (
-    cloud_function,
     create_wsgi_app,
     bot,
 )
