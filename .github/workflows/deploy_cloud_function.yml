@@ -36,7 +36,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           grep -oP 'version = "\K[0-9]+\.[0-9]+\.[0-9]+(?=")' pyproject.toml | \
-          sed -e 's/^/revision\=v/' >> $GITHUB_OUTPUTS 
+          sed -e 's/^/revision\=v/' >> $GITHUB_OUTPUT 
       - name: Create new tag (fail if tag existed)
         if: github.event_name == 'push'
         run: 
@@ -48,7 +48,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: |
           git checkout ${{ inputs.revision }} && \
-          sed -e 's/^/revision\=/' >> $GITHUB_OUTPUTS
+          sed -e 's/^/revision\=/' >> $GITHUB_OUTPUT
     
   # TODO: release creation
   # TODO: testing
