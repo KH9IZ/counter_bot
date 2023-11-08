@@ -1,32 +1,78 @@
 name: Deploy
-run-name: ${{ github.actor }} started deploy on Yandex Cloud Function
+run-name: Deploy to Yandex Cloud Function by ${{ github.actor }} 
 
 on:
+  # Run deploy action only when pyproject.toml changed or when manually triggered
   push:
     branches:
       - master
-    tags:
+    paths:
+      - 'pyproject.toml'
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: |
+          Tag, commit hash or branch name
+          Default: master
+        type: string
+        default: 'master'
+        required: false
+
+permissions: {}  # disable all permissions
 
 jobs:
-  # TODO: check version change job
-  deploy-to-yc:
-    if: startsWith(github.ref, 'refs/tags/') && startsWith(github.ref_name, 'v')
-
+  preprocessing:
+    name: Prepare deployment
+    permissions: 
+      actions: write  # permit cancel workflow
+      contents: write  # permit tag creation
     runs-on: ubuntu-latest
+    outputs:
+      revision: ${{ steps.push-specific.outputs.revision || steps.dispatch-specific.outputs.revision }}
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Create requests.txt
-      run: echo "counter_bot @ git+https://github.com/KH9IZ/counter_bot.git@${{github.ref_name}}" > requirements.txt
-    - name: Deploy function
-      id: sls-func
-      uses: yc-actions/yc-sls-function@v2
-      with:
-        yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-        folder-id: 'b1gjoe0i1p33c41023gp'
-        function-name: 'my-first-cloud-function'
-        runtime: 'python311'
-        memory: '128Mb'
-        entrypoint: 'counter_bot.cloud_function'
-        include: requirements.txt
-        environment: TOKEN=${{ secrets.TOKEN }}
+      - uses: actions/checkout@v3
+      - name: Retrieve version from pyproject.toml
+        id: push-specific
+        if: github.event_name == 'push'
+        run: |
+          grep -oP 'version = "\K[0-9]+\.[0-9]+\.[0-9]+(?=")' pyproject.toml | \
+          sed -e 's/^/revision\=v/' >> $GITHUB_OUTPUTS 
+      - name: Create new tag (fail if tag existed)
+        if: github.event_name == 'push'
+        run: 
+          git tag ${{ steps.push-specific.outputs.revision }} && \
+          git push --tags
+
+      - name: Check revision if triggered manually
+        id: dispatch-specific
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git checkout ${{ inputs.revision }} &&
+          sed -e 's/^/revision\=/' >> $GITHUB_OUTPUTS
+    
+  # TODO: release creation
+  # TODO: testing
+    
+  production:
+    name: Deploy revision ${{ needs.preprocessing.outputs.revision }} to production
+    permissions: {}
+    needs: preprocessing
+    runs-on: ubuntu-latest
+    environment: 
+      name: production
+      url: https://t.me/chauss_counter_bot
+    steps:
+      - name: Create requests.txt
+        run: echo "counter_bot @ git+https://github.com/KH9IZ/counter_bot.git@${{ needs.preprocessing.outputs.revision }}" > requirements.txt
+      - name: Deploy function
+        id: sls-func
+        uses: yc-actions/yc-sls-function@v2
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          folder-id: ${{ vars.YC_FOLDER_ID }}
+          function-name: ${{ vars.YC_FUNCTION_NAME }}
+          runtime: 'python311'
+          memory: '128Mb'
+          entrypoint: 'counter_bot.cloud_function'
+          include: requirements.txt
+          environment: TOKEN=${{ secrets.TOKEN }}
