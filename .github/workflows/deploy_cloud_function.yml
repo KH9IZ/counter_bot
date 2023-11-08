@@ -39,7 +39,7 @@ jobs:
           sed -e 's/^/revision=v/' >> "$GITHUB_OUTPUT"
       - name: Create new tag (fail if tag existed)
         if: github.event_name == 'push'
-        run: 
+        run: |
           git tag ${{ steps.push-specific.outputs.revision }} && \
           git push --tags
 
