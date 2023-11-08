@@ -47,8 +47,8 @@ jobs:
         id: dispatch-specific
         if: github.event_name == 'workflow_dispatch'
         run: |
-          git checkout ${{ inputs.revision }} && \
-          sed -e 's/^/revision=/' | tee -a "$GITHUB_OUTPUT"
+          git checkout ${{ inputs.revision }}
+          echo "revision=${{ inputs.revision }}" >> $GITHUB_OUTPUT
     
   # TODO: release creation
   # TODO: testing
