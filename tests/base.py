@@ -1,9 +1,6 @@
 from unittest import TestCase
 
-from telebot.types import (
-    Update,
-    Message,
-)
+from telebot.types import Update
 from telebot import apihelper
 
 from tests.tg_faker import TgFaker

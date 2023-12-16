@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 
-from telebot import apihelper
-from unittest import TestCase
-
 from counter_bot import bot
-from tests.utils import build_message
 from tests.base import (
     BaseBotTestCase,
     TEST_COUNTER_TEMPLATE,

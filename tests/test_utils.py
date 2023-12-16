@@ -4,19 +4,11 @@ from unittest import TestCase
 import os
 from tempfile import NamedTemporaryFile
 
-from telebot import apihelper
-from telebot.types import Dice
-
 from counter_bot.main import (
-    app, 
     bot,
     get_config,
     create_wsgi_app,
-    polling,
 )
-from tests.base import BaseBotTestCase
-from tests.tg_faker import TgFaker
-from tests.utils import build_message
 
 
 class GetConfigTestCase(TestCase):

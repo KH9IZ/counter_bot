@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-from unittest import TestCase
 
-from telebot import apihelper
 from telebot.types import Dice
 
 from counter_bot import bot

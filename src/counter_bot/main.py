@@ -11,10 +11,7 @@ from flask import (
     request,
 )
 from telebot import TeleBot
-from telebot.types import (
-    ForceReply,
-    Update,
-)
+from telebot.types import Update
 from telebot.util import quick_markup
 
 
@@ -70,7 +67,7 @@ def reset_webhook():
 @bot.message_handler(commands=['start', 'create'])
 def new_counter(msg):
     bot.delete_message(msg.chat.id, msg.message_id)
-    sent = bot.send_message(
+    bot.send_message(
         chat_id=msg.chat.id, 
         text=COUNTER_TEMPLATE.format(counter_name='', cnt=0),
         reply_markup=KEYBOARD,
@@ -114,7 +111,7 @@ def fallback(msg):
 def get_config(config_path=None):
     config_path = config_path or os.getenv('BOT_CONFIG_PATH', None)
     if config_path is None:
-        raise ValueError(f"Specify BOT_CONFIG_PATH variable")
+        raise ValueError("Specify BOT_CONFIG_PATH variable")
     if not os.path.exists(config_path):
         raise ValueError(f"No such path {config_path}")
 
@@ -163,7 +160,3 @@ def cloud_function(event, context):
         'statusCode': 200,
         'body': '',
     }
-
-
-if __name__ == "__main__":
-    polling(sys.argv[2] if len(sys.argv) >= 2 else None)
