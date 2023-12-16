@@ -5,12 +5,9 @@ import os
 from tempfile import NamedTemporaryFile
 
 from telebot import apihelper
-from telebot.types import Dice
 
 from counter_bot.main import app, bot
-from tests.base import BaseBotTestCase
 from tests.tg_faker import TgFaker
-from tests.utils import build_message
 
 
 class BaseRouteTestCase(TestCase):
