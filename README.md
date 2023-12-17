@@ -1,4 +1,5 @@
 # Counter bot
+
 Trivial telegram bot for counting everything.
 
 Project structure: [src layout](https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/)
