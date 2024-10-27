@@ -75,4 +75,6 @@ jobs:
           memory: '128Mb'
           entrypoint: 'counter_bot.cloud_function'
           include: requirements.txt
-          environment: TOKEN=${{ secrets.TOKEN }}
+          environment: |
+            TOKEN=${{ secrets.TOKEN }}
+            SECRET_TOKEN=${{ secrets.SECRET_TOKEN }}
